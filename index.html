@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="一个简洁、可离线使用的个人计划与待办管理工具。"
+    />
+    <meta name="theme-color" content="#f4f5f3" />
+    <title>Focus Ledger · 个人计划</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true">
+      <symbol id="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path>
+      </symbol>
+      <symbol id="icon-week" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4M8 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"></path>
+      </symbol>
+      <symbol id="icon-month" viewBox="0 0 24 24">
+        <rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M8 2v4M16 2v4M3 9h18M7 13h3M14 13h3M7 17h3M14 17h3"></path>
+      </symbol>
+      <symbol id="icon-horizon" viewBox="0 0 24 24">
+        <path d="M3 18h18M5 14l4-4 3 3 5-7 2 3"></path><path d="M17 6h3v3"></path>
+      </symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"></circle><path d="m8 12 2.5 2.5L16 9"></path>
+      </symbol>
+      <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></symbol>
+      <symbol id="icon-edit" viewBox="0 0 24 24">
+        <path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"></path>
+      </symbol>
+      <symbol id="icon-trash" viewBox="0 0 24 24">
+        <path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 10v7M14 10v7"></path>
+      </symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></symbol>
+      <symbol id="icon-sort" viewBox="0 0 24 24"><path d="M8 6h13M8 12h9M8 18h5M3 5v14M1 17l2 2 2-2"></path></symbol>
+    </svg>
+
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="主要导航">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true">F</div>
+          <div>
+            <p class="brand-name">Focus Ledger</p>
+            <p class="brand-caption">Personal planning</p>
+          </div>
+        </div>
+
+        <nav class="side-nav" aria-label="任务时间尺度">
+          <p class="nav-label">计划范围</p>
+          <button class="nav-item is-active" type="button" data-view="today" aria-current="page">
+            <svg><use href="#icon-sun"></use></svg><span>Today</span><span class="nav-count" data-count="today">0</span>
+          </button>
+          <button class="nav-item" type="button" data-view="week">
+            <svg><use href="#icon-week"></use></svg><span>This Week</span><span class="nav-count" data-count="week">0</span>
+          </button>
+          <button class="nav-item" type="button" data-view="month">
+            <svg><use href="#icon-month"></use></svg><span>This Month</span><span class="nav-count" data-count="month">0</span>
+          </button>
+          <button class="nav-item" type="button" data-view="long-term">
+            <svg><use href="#icon-horizon"></use></svg><span>Long Term</span><span class="nav-count" data-count="long-term">0</span>
+          </button>
+          <button class="nav-item nav-item-completed" type="button" data-view="completed">
+            <svg><use href="#icon-check"></use></svg><span>Completed</span><span class="nav-count" data-count="completed">0</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-summary" aria-label="任务总览">
+          <div>
+            <span class="summary-number" id="sidebar-open-count">0</span>
+            <span class="summary-label">待完成</span>
+          </div>
+          <div class="summary-rule"></div>
+          <div>
+            <span class="summary-number" id="sidebar-done-count">0</span>
+            <span class="summary-label">已完成</span>
+          </div>
+        </div>
+
+        <p class="storage-note"><span aria-hidden="true"></span>数据仅保存在此浏览器</p>
+      </aside>
+
+      <main class="main-content">
+        <header class="page-header">
+          <div>
+            <p class="date-line" id="current-date">—</p>
+            <h1 id="page-title">Today</h1>
+            <p class="page-description" id="page-description">把今天最重要的事情放在眼前。</p>
+          </div>
+          <button class="primary-button" id="add-task-button" type="button">
+            <svg aria-hidden="true"><use href="#icon-plus"></use></svg>
+            <span>新增任务</span>
+          </button>
+        </header>
+
+        <section class="progress-panel" aria-label="完成进度">
+          <div class="progress-copy">
+            <p class="progress-kicker">OVERVIEW</p>
+            <p class="progress-sentence" id="progress-sentence">还没有任务，从一件小事开始。</p>
+          </div>
+          <div class="progress-metrics">
+            <div><strong id="open-count">0</strong><span>未完成</span></div>
+            <div><strong id="done-count">0</strong><span>已完成</span></div>
+          </div>
+          <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
+        </section>
+
+        <section class="task-section" aria-labelledby="task-list-heading">
+          <div class="toolbar">
+            <div class="filter-group" aria-label="任务状态筛选">
+              <button class="filter-button is-active" type="button" data-filter="all">全部</button>
+              <button class="filter-button" type="button" data-filter="open">待完成</button>
+              <button class="filter-button" type="button" data-filter="completed">已完成</button>
+            </div>
+            <label class="sort-control">
+              <svg aria-hidden="true"><use href="#icon-sort"></use></svg>
+              <span class="sr-only">任务排序</span>
+              <select id="sort-select" aria-label="任务排序">
+                <option value="created">最近创建</option>
+                <option value="priority">优先级</option>
+                <option value="dueDate">截止日期</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="list-heading-row">
+            <h2 id="task-list-heading">任务列表</h2>
+            <span id="visible-count" aria-live="polite">0 项</span>
+          </div>
+
+          <div class="task-list" id="task-list"></div>
+
+          <div class="empty-state" id="empty-state" hidden>
+            <div class="empty-symbol" aria-hidden="true"><span></span><span></span><span></span></div>
+            <h3 id="empty-title">这里还没有任务</h3>
+            <p id="empty-description">添加一个任务，为这一段时间确定清晰的方向。</p>
+            <button class="text-button" id="empty-add-button" type="button">新增第一个任务 <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <nav class="mobile-nav" aria-label="移动端任务时间尺度">
+      <button class="mobile-nav-item is-active" type="button" data-view="today" aria-current="page"><svg><use href="#icon-sun"></use></svg><span>Today</span></button>
+      <button class="mobile-nav-item" type="button" data-view="week"><svg><use href="#icon-week"></use></svg><span>Week</span></button>
+      <button class="mobile-nav-item" type="button" data-view="month"><svg><use href="#icon-month"></use></svg><span>Month</span></button>
+      <button class="mobile-nav-item" type="button" data-view="long-term"><svg><use href="#icon-horizon"></use></svg><span>Long</span></button>
+      <button class="mobile-nav-item" type="button" data-view="completed"><svg><use href="#icon-check"></use></svg><span>Done</span></button>
+    </nav>
+
+    <dialog class="task-dialog" id="task-dialog" aria-labelledby="dialog-title">
+      <form id="task-form" method="dialog" novalidate>
+        <div class="dialog-header">
+          <div>
+            <p class="dialog-kicker" id="dialog-kicker">NEW ENTRY</p>
+            <h2 id="dialog-title">新增任务</h2>
+          </div>
+          <button class="icon-button close-button" id="close-dialog-button" type="button" aria-label="关闭">
+            <svg aria-hidden="true"><use href="#icon-close"></use></svg>
+          </button>
+        </div>
+
+        <input type="hidden" id="task-id" />
+        <label class="field field-title">
+          <span>任务标题 <em>*</em></span>
+          <input id="task-title" name="title" type="text" maxlength="120" placeholder="例如：整理本周研究笔记" autocomplete="off" required />
+          <small class="field-error" id="title-error" aria-live="polite"></small>
+        </label>
+
+        <label class="field">
+          <span>描述 <small>可选</small></span>
+          <textarea id="task-description" name="description" rows="3" maxlength="500" placeholder="补充背景、下一步或完成标准…"></textarea>
+        </label>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>计划范围</span>
+            <select id="task-category" name="category">
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="long-term">Long Term</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>截止日期 <small>可选</small></span>
+            <input id="task-due-date" name="dueDate" type="date" />
+          </label>
+        </div>
+
+        <fieldset class="priority-field">
+          <legend>优先级</legend>
+          <div class="priority-options">
+            <label><input type="radio" name="priority" value="low" /><span><i></i>Low</span></label>
+            <label><input type="radio" name="priority" value="medium" checked /><span><i></i>Medium</span></label>
+            <label><input type="radio" name="priority" value="high" /><span><i></i>High</span></label>
+          </div>
+        </fieldset>
+
+        <div class="dialog-actions">
+          <button class="secondary-button" id="cancel-dialog-button" type="button">取消</button>
+          <button class="primary-button save-button" type="submit">保存任务</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
